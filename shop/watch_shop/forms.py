@@ -20,16 +20,18 @@ class UserEditForm(UserChangeForm):
 
 
 class CheckoutForm(forms.Form):
-
-    billing_address = forms.CharField(required=False)
-    billing_address2 = forms.CharField(required=False)
+    billing_address = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control form-control-lg', 'placeholder': 'House number and street name'}))
+    billing_address2 = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'class': 'form-control form-control-lg', 'placeholder': 'Apartment, Suite, Unit, etc (optional)'}))
     billing_country = CountryField(blank_label='(select country)').formfield(
         required=False,
         widget=CountrySelectWidget(attrs={
             'class': 'custom-select d-block w-100',
         }))
-    billing_zip = forms.CharField(required=False)
-
-    set_default_billing = forms.BooleanField(required=False)
-    use_default_billing = forms.BooleanField(required=False)
-
+    billing_zip = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control form-control-lg', 'placeholder': 'Zip Code'}))

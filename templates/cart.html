@@ -42,26 +42,29 @@
                     {% for order_item in object.watch.all %}
                     <tr>
                       <th class="ps-0 py-3 border-light" scope="row">
-                        <div class="d-flex align-items-center"><a class="reset-anchor d-block animsition-link" href="#!"><img src="{{ order_item.image.url }}" alt="..." width="70"/></a>
-                            <div class="ms-3"><strong class="h6"><a class="reset-anchor animsition-link" href="#!">{{ order_item.name }}</a></strong></div>
+                            <div class="d-flex align-items-center"><a class="reset-anchor d-block animsition-link" href="{% url "detail" order_item.watch.slug %}"><img src="{{ order_item.watch.watch_image.url }}" alt="..." width="70"/></a>
+                            <div class="ms-3"><strong class="h6"><a class="reset-anchor animsition-link" href="{% url "detail" order_item.watch.slug %}">{{ order_item.watch.name }}</a></strong></div>
                         </div>
                       </th>
                       <td class="p-3 align-middle border-light">
-                        <p class="mb-0 small">{{order_item.price}}</p>
+                        <p class="mb-0 small">{{order_item.watch.price}}$</p>
                       </td>
                       <td class="p-3 align-middle border-light">
-                        <div class="border d-flex align-items-center justify-content-between px-3"><span class="small text-uppercase text-gray headings-font-family">{{ order_item.quantity }}$</span>
+                        <div class="border d-flex align-items-center justify-content-between px-3"><span class="small text-uppercase text-gray headings-font-family">{{ order_item.quantity }}</span>
                           <div class="quantity">
+                              <a href="{% url 'remove single item from cart' order_item.watch.slug %}">
                             <button class="dec-btn p-0"><i class="fas fa-caret-left"></i></button>
-                            <input class="form-control form-control-sm border-0 shadow-0 p-0" type="text" value="1"/>
+                                  </a>
+                              <a href="{% url 'add to cart' order_item.watch.slug %}">
                             <button class="inc-btn p-0"><i class="fas fa-caret-right"></i></button>
+                                  </a>
                           </div>
                         </div>
                       </td>
                       <td class="p-3 align-middle border-light">
                         <p class="mb-0 small">{{ order_item.get_total_item_price }}$</p>
                       </td>
-                      <td class="p-3 align-middle border-light"><a class="reset-anchor" href="#!"><i class="fas fa-trash-alt small text-muted"></i></a></td>
+                      <td class="p-3 align-middle border-light"><a class="reset-anchor" href="{% url 'remove from cart' order_item.watch.slug %}"><i class="fas fa-trash-alt small text-muted"></i></a></td>
                     </tr>
                   {% endfor %}
                   </tbody>

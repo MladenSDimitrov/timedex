@@ -47,11 +47,10 @@ class Address(models.Model):
     billing_address_alt = models.CharField(max_length=100)
     country = CountryField(multiple=False)
     zip = models.CharField(max_length=100)
-    default = models.BooleanField(default=False)
 
     @property
     def get_name(self):
-        return self.user.first_name + " " + self.user.last_name
+        return self.user.email
 
     @property
     def get_id(self):
@@ -106,12 +105,11 @@ class OrderWatch(models.Model):
 class Order(models.Model):
     user = models.ForeignKey('WatchShopUser', on_delete=models.CASCADE)
     watch = models.ManyToManyField('OrderWatch')
-    address = models.CharField(max_length=500, null=True)
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
-    shipping_address = models.ForeignKey(
-        'Address', related_name='shipping_address', on_delete=models.SET_NULL, blank=True, null=True)
+    billing_address = models.ForeignKey(
+        'Address', related_name='billing_address', on_delete=models.SET_NULL, blank=True, null=True)
     received = models.BooleanField(default=False)
 
     def __str__(self):

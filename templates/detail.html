@@ -19,35 +19,11 @@
 
             <!-- PRODUCT DETAILS-->
             <div class="col-lg-6">
-              <ul class="list-inline mb-2 text-sm">
-                <li class="list-inline-item m-0"><i class="fas fa-star small text-warning"></i></li>
-                <li class="list-inline-item m-0 1"><i class="fas fa-star small text-warning"></i></li>
-                <li class="list-inline-item m-0 2"><i class="fas fa-star small text-warning"></i></li>
-                <li class="list-inline-item m-0 3"><i class="fas fa-star small text-warning"></i></li>
-                <li class="list-inline-item m-0 4"><i class="fas fa-star small text-warning"></i></li>
-              </ul>
               <h1>{{ watch.name}}</h1>
               <p class="text-muted lead">{{watch.price}}$</p>
               <div class="row align-items-stretch mb-4">
-                <div class="col-sm-5 pr-sm-0">
-                  <div class="border d-flex align-items-center justify-content-between py-1 px-3 bg-white border-white"><span class="small text-uppercase text-gray mr-4 no-select">Quantity</span>
-                    <div class="quantity">
-                        <a href="{% url 'remove single item from cart' watch.slug %}">
-                      <button class="dec-btn p-0"><i class="fas fa-caret-left"></i></button>
-                        </a>
-                      <input class="form-control border-0 shadow-0 p-0" type="text" value="1">
-                        <a href="{% url 'add to cart' watch.slug %}">
-                      <button class="inc-btn p-0"><i class="fas fa-caret-right"></i></button>
-                        </a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-3 pl-sm-0"><a class="btn btn-dark btn-sm btn-block h-100 d-flex align-items-center justify-content-center px-0" href="cart.html">Add to cart</a></div>
-              <ul class="list-unstyled small d-inline-block">
-                <li class="px-3 py-2 mb-1 bg-white"><strong class="text-uppercase">SKU:</strong><span class="ms-2 text-muted">039</span></li>
-                <li class="px-3 py-2 mb-1 bg-white text-muted"><strong class="text-uppercase text-dark">Category:</strong><a class="reset-anchor ms-2" href="#!">Demo Products</a></li>
-                <li class="px-3 py-2 mb-1 bg-white text-muted"><strong class="text-uppercase text-dark">Tags:</strong><a class="reset-anchor ms-2" href="#!">Innovation</a></li>
-              </ul>
+                <div class="col-sm-3 pl-sm-0"><a class="btn btn-dark btn-sm btn-block h-100 d-flex align-items-center justify-content-center px-0" href="{% url 'add to cart' watch.slug %}">Add to cart</a></div>
+                <div class="col-sm-3 pl-sm-0"><a class="btn btn-dark btn-sm btn-block h-100 d-flex align-items-center justify-content-center px-0" href="{% url 'remove from cart' watch.slug %}">Remove</a></div>
             </div>
           <!-- DETAILS TABS-->
           <div class="tab-content mb-5" id="myTabContent">

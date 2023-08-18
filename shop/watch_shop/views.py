@@ -60,16 +60,19 @@ def add_to_cart(request, slug):
     if order_qs.exists():
         order = order_qs[0]
         # check if the order item is in the order
-        if order.watch.filter(watch__slug=item.slug).exists():
+        if order.watch.filter(watch__slug=item.slug, ordered=False).exists():
+            print("here")
             order_item.quantity += 1
             order_item.save()
             messages.info(request, "This item quantity was updated.")
             return redirect("order summary")
         else:
+            print("here1")
             order.watch.add(order_item)
             messages.info(request, "This item was added to your cart.")
             return redirect("order summary")
     else:
+        print("here2")
         ordered_date = timezone.now()
         order = Order.objects.create(
             user=request.user, ordered_date=ordered_date)
@@ -94,7 +97,7 @@ def remove_from_cart(request, slug):
                 user=request.user,
                 ordered=False
             )[0]
-            order.items.remove(order_item)
+            order.watch.remove(order_item)
             order_item.delete()
             messages.info(request, "This item was removed from your cart.")
             return redirect("order summary")
@@ -126,9 +129,9 @@ def remove_single_item_from_cart(request, slug):
                 order_item.quantity -= 1
                 order_item.save()
             else:
-                order.items.remove(order_item)
+                order.watch.remove(order_item)
             messages.info(request, "This item quantity was updated.")
-            return redirect("detail")
+            return redirect("order summary")
         else:
             messages.info(request, "This item was not in your cart")
             return redirect("detail", slug=slug)
@@ -147,14 +150,6 @@ class CheckoutView(View):
                 'order': order,
             }
 
-            billing_address_qs = Address.objects.filter(
-                user=self.request.user,
-                default=True
-            )
-            if billing_address_qs.exists():
-                context.update(
-                    {'default_shipping_address': billing_address_qs[0]})
-
             return render(self.request, "checkout.html", context)
         except ObjectDoesNotExist:
             messages.info(self.request, "You do not have an active order")
@@ -166,23 +161,6 @@ class CheckoutView(View):
             order = Order.objects.get(user=self.request.user, ordered=False)
             if form.is_valid():
 
-                use_default_billing = form.cleaned_data.get(
-                    'use_default_shipping')
-                if use_default_billing:
-                    print("Using the defualt billing address")
-                    address_qs = Address.objects.filter(
-                        user=self.request.user,
-                        default=True
-                    )
-                    if address_qs.exists():
-                        billing_adress = address_qs[0]
-                        order.shipping_address = billing_adress
-                        order.save()
-                    else:
-                        messages.info(
-                            self.request, "No default billing address available")
-                        return redirect('core:checkout')
-                else:
                     print("User is entering new billing address")
                     billing_address1 = form.cleaned_data.get(
                         'billing_address')
@@ -203,17 +181,18 @@ class CheckoutView(View):
                         billing_address.save()
 
                         order.billing_address = billing_address
+                        order.ordered = True
+                        for ordered_watch in OrderWatch.objects.filter(user=self.request.user, ordered=False):
+                            ordered_watch.ordered = True
+                            ordered_watch.save()
                         order.save()
-
-                        set_default_billing = form.cleaned_data.get(
-                            'set_default_billing')
-                        if set_default_billing:
-                            billing_address.default = True
-                            billing_address.save()
+                        messages.info(self.request, "You order was submitted successfully")
+                        return redirect("home")
 
                     else:
                         messages.info(
                             self.request, "Please fill in the required billing address fields")
+                        return redirect("checkout")
 
         except ObjectDoesNotExist:
             messages.warning(self.request, "You do not have an active order")
