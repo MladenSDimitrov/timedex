@@ -1,10 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "index.html" %}
+{%  load static %}
 
-</body>
-</html>
+        {% block content %}
+            <div class="container">
+          <section class="py-5">
+            <div class="container p-0">
+                <div class="row">
+                   <div class="col-lg-6">
+                      <h2 class="h2 text-uppercase mb-0">Login</h2>
+                   </div>
+                    <form method="POST">
+                            {% csrf_token %}
+                        <div class="row gy-3">
+                            <div class="col-lg-12">
+                             <label class="form-label text-sm text-uppercase" for="id_email">E-Mail:</label>
+                                    {{ form.username }}
+                            </div>
+                            <div class="col-lg-12">
+                                <label class="form-label text-sm text-uppercase" for="id_password1">Password:</label>
+                                {{form.password}}
+                            </div>
+                            <div class="col-lg-12 form-group">
+                                    <button class="btn btn-dark" type="submit">Sign In</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+          </section>
+    </div>
+
+
+        {% endblock %}
+

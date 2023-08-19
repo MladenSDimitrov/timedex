@@ -153,7 +153,7 @@ class CheckoutView(View):
             return render(self.request, "checkout.html", context)
         except ObjectDoesNotExist:
             messages.info(self.request, "You do not have an active order")
-            return redirect("checkout")
+            return redirect("home")
 
     def post(self, *args, **kwargs):
         form = CheckoutForm(self.request.POST or None)
@@ -161,52 +161,53 @@ class CheckoutView(View):
             order = Order.objects.get(user=self.request.user, ordered=False)
             if form.is_valid():
 
-                    print("User is entering new billing address")
-                    billing_address1 = form.cleaned_data.get(
-                        'billing_address')
-                    billing_address2 = form.cleaned_data.get(
-                        'billing_address2')
-                    billing_country = form.cleaned_data.get(
-                        'billing_country')
-                    billing_zip = form.cleaned_data.get('billing_zip')
+                print("User is entering new billing address")
+                billing_address1 = form.cleaned_data.get(
+                    'billing_address')
+                billing_address2 = form.cleaned_data.get(
+                    'billing_address2')
+                billing_country = form.cleaned_data.get(
+                    'billing_country')
+                billing_zip = form.cleaned_data.get('billing_zip')
 
-                    if is_valid_form([billing_address1, billing_country, billing_zip]):
-                        billing_address = Address(
-                            user=self.request.user,
-                            billing_adress=billing_address1,
-                            billing_address_alt=billing_address2,
-                            country=billing_country,
-                            zip=billing_zip,
-                        )
-                        billing_address.save()
+                if is_valid_form([billing_address1, billing_country, billing_zip]):
+                    billing_address = Address(
+                        user=self.request.user,
+                        billing_adress=billing_address1,
+                        billing_address_alt=billing_address2,
+                        country=billing_country,
+                        zip=billing_zip,
+                    )
+                    billing_address.save()
 
-                        order.billing_address = billing_address
-                        order.ordered = True
-                        for ordered_watch in OrderWatch.objects.filter(user=self.request.user, ordered=False):
-                            ordered_watch.ordered = True
-                            ordered_watch.save()
-                        order.save()
-                        messages.info(self.request, "You order was submitted successfully")
-                        return redirect("home")
+                    order.billing_address = billing_address
+                    order.ordered = True
+                    for ordered_watch in OrderWatch.objects.filter(user=self.request.user, ordered=False):
+                        ordered_watch.ordered = True
+                        ordered_watch.save()
+                    order.save()
+                    messages.info(self.request, "You order was submitted successfully")
+                    return redirect("home")
 
-                    else:
-                        messages.info(
-                            self.request, "Please fill in the required billing address fields")
-                        return redirect("checkout")
+                else:
+                    messages.info(
+                        self.request, "Please fill in the required billing address fields")
+                    return redirect("checkout")
 
         except ObjectDoesNotExist:
             messages.warning(self.request, "You do not have an active order")
             return redirect("order summary")
 
+
 class SignUpView(CreateView):
     template_name = 'sign-up.html'
     form_class = SignUpForm
-    success_url = reverse_lazy('catalogue')
+    success_url = reverse_lazy('browse')
 
-    def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-        login(request, self.object)
-        return response
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+        return redirect('browse')
 
 
 class SignOutView(auth_views.LogoutView):
@@ -214,8 +215,8 @@ class SignOutView(auth_views.LogoutView):
 
 
 class SignInView(auth_views.LoginView):
-    template_name = 'login.html'
+    template_name = 'sign-in.html'
 
 
 def about_us_view(request):
-    return render(request, 'about-us.html')
+    return render(request, 'about.html')

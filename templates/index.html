@@ -25,10 +25,12 @@
     <link rel="stylesheet" href="{%  static 'css/custom.css' %}">
     <!-- Favicon-->
     <link rel="shortcut icon" href="{%  static 'img/favicon.png' %}">
+
   </head>
   <body>
     <div class="page-holder">
         {% include "navbar.html" %}
+        {% include 'messages.html' %}
         {% block content %}
       <!-- HERO SECTION-->
       <div class="container">

@@ -12,16 +12,17 @@
                   <!-- Link--><a class="nav-link" href="{% url 'browse' %}">Shop</a>
                 </li>
                 <li class="nav-item">
-                  <!-- Link--><a class="nav-link" href="#!">About</a>
+                  <!-- Link--><a class="nav-link" href="{% url 'about' %}">About</a>
                 </li>
               </ul>
               <ul class="navbar-nav ms-auto">
                   {% if request.user.is_authenticated %}
                   <li class="nav-item"><a class="nav-link" href="{% url 'order summary' %}"> <i class="fas fa-dolly-flatbed me-1 text-gray"></i>Cart<small class="text-gray fw-normal">{{ request.user|cart_item_count }}</small></a></li>
-                  <li class="nav-item"><a class="nav-link" href="#!"> <i class="fas fa-user me-1 text-gray fw-normal"></i>Logout</a></li>
+                  <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}"> <i class="fas fa-user me-1 text-gray fw-normal"></i>Logout</a></li>
                   {% else %}
                   <li class="nav-item"><a class="nav-link" href="{% url 'order summary' %}"> <i class="fas fa-dolly-flatbed me-1 text-gray"></i>Cart<small class="text-gray fw-normal">0</small></a></li>
-                  <li class="nav-item"><a class="nav-link" href="#!"> <i class="fas fa-user me-1 text-gray fw-normal"></i>Login</a></li>
+                  <li class="nav-item"><a class="nav-link" href="{% url 'login' %}"> <i class="fas fa-user me-1 text-gray fw-normal"></i>Login</a></li>
+                  <li class="nav-item"><a class="nav-link" href="{% url 'register' %}"> <i class="fas fa-user me-1 text-gray fw-normal"></i>Register</a></li>
                   {% endif %}
               </ul>
             </div>
