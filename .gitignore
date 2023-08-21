@@ -42,6 +42,8 @@ coverage.xml
 # Rope
 .ropeproject
 
+
+
 # Django stuff:
 *.log
 *.pot
@@ -50,3 +52,5 @@ coverage.xml
 docs/_build/
 
 .env
+.idea/
+_pycache_
